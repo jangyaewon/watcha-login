@@ -1,0 +1,99 @@
+<h1 id="title">Movies</h1>
+<input type="text" class="form-control movie-title">
+<div class="recomm-movie d-flex justify-content-start row">
+
+</div>  
+<hr>
+<br>
+<div id= "title" class="row">
+<% @movies.each do |movie| %>
+<div class="card col-md-3">
+  <img class="card-img-top" src="<%= movie.image_path.thumb.url%>" alt="<%= movie.title%>">
+  <div class="card-body">
+    <h5 class="card-title"><span><%= movie.title%></span></h5>
+    <p class="card-text">장르 : <%= movie.genre%></p>
+    <p class="card-text">주연배우 : <%= movie.actor%></p>
+    <p class="card-text">감독 : <%= movie.director%></p>
+    <%= link_to '영화 정보보기', movie_path(movie), class: 'btn btn-primary' %>
+  </div>
+</div>
+<%  end %>
+<%= paginate @movies, theme: 'twitter-bootstrap-4',
+                   pagination_class: "pagination-sm"%>
+</div>
+<br>
+
+<%= link_to 'New Movie', new_movie_path %>
+<hr>
+<% if user_signed_in? %>
+<!-- 로그인된 상태  -->
+<%= current_user.email%>
+<%= link_to '로그 아웃', destroy_user_session_path, method: "delete" %>
+<% else %>
+<!-- 로그아웃된 상태  -->
+<%= link_to '로그인', new_user_session_path %>
+<%  end %>
+
+
+<script> 
+
+$(document).on('ready', function(){
+    $('.movie-title').on('change', function(){
+      $('.recomm-movie').html('');
+        var title = $(this).val();
+        $.ajax({
+          url: '/movies/search_movie',
+          data: {
+            q: title
+          }
+        });
+    });
+});
+
+// var func = function(){
+//     alert("하하");
+// }
+
+// function func1(){
+//     alert("하이");
+// }
+
+// var btn = document.getElementsByClassName("btn")[1];
+// btn.addEventListener("mouseover", func1);
+
+// var btn2 = document.getElementsByClassName("btn")[0];
+// btn2.onmouseover = func;
+
+// // 먼저 선언되어 있단 함수를 이벤트 핸들러로 사용할 경우
+// // 함수 이름만 적어서 사용한다.
+// // 함수이름() <- 이 형태는 함수의 실행을 의미한다.
+
+//버튼(요소)에 마우스를 오버(이벤트) 했더니(이벤트리스너)
+// 그 위에 있던 글자들(요소)이 갑자기 이상한 글자로 변해버렸다.(이벤트 핸들러)
+// var mtitle = document.getElementsByClassName("card-title")[0].innerText
+
+// var btn = document.getElementsByClassName("btn")[0];
+// btn.addEventListener("mouseover",function(){
+//   var title = document.getElementsByClassName("card-title")[0];
+//   console.dir(title);
+//   title.innerText = "건드리지마";
+// });
+// btn.addEventListener("mouseleave",function(){
+//   var title = document.getElementsByClassName("card-title")[0];
+  
+//   title.innerText = mtitle;
+// });
+
+
+// 버튼(요소)에 마우스를 올리면(이벤트, 이벤트 리스너) 
+//해당 버튼의 class가 btn btn-danger로 변함
+// var btn = document.getElementsByClassName("btn")[0];
+// btn.addEventListener("mouseover", function(){
+//   btn.setAttribute("class","btn btn-danger disabled");
+// })
+// btn.addEventListener("mouseout", function(){
+//   btn.setAttribute("class","btn btn-info");
+// })
+
+
+</script>
